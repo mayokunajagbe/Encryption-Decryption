@@ -20,11 +20,12 @@ public class Main {
         System.out.println("----------------------------------------");
         System.out.println("Begin Encryption........................");
         System.out.println("----------------------------------------");
-        System.out.println("After Encrypting: " + encryptString(MyText,ShiftValue, GroupSize));
+        String encryptedText = encryptString(MyText,ShiftValue, GroupSize);
+        System.out.println("After Encrypting: " + encryptedText);
         System.out.println("----------------------------------------");
         System.out.println("Begin Decryption........................");
         System.out.println("----------------------------------------");
-        System.out.println("After Decrypting: " + decryptString(encryptString(MyText,ShiftValue, GroupSize), ShiftValue));
+        System.out.println("After Decrypting: " + decryptString(encryptedText, ShiftValue));
         System.out.println("----------------------------------------");
         System.out.println("-----------------DONE-------------------");
         System.out.println("----------------------------------------");
@@ -32,7 +33,7 @@ public class Main {
     //This method takes a string parameter, removes the special specified characters and returns the string in UPPER
     // CASE.
     public static String normalizeText(String text){
-        String pattern = "[ .,:;'\"!?()]";
+        String pattern = "[ .,:;'\"!?()\\\\]";
         String RemoveSpecial = text.replaceAll(pattern, "");
         String NormalizingText = "";
         for (int i = 0; i < RemoveSpecial.length(); i++) {
@@ -65,7 +66,7 @@ public class Main {
     // specified in the "key" parameter and returns the updated string.
     public static String ceasarifyText(String Text, int key){
         String CeaserifiedText = "";
-        int PositionAtAlpha = 0;
+        int PositionAtAlpha;
 
         for (int a = 0; a < Text.length(); a++){
             char temp = Text.charAt(a);
@@ -85,12 +86,10 @@ public class Main {
         }
 
         for (int i = 0; i < Alphabets.length(); i++){
-            if (Alphabets.charAt(i) == SingleAlpha){
-                CharPosition = i;
-                break;
+            if (SingleAlpha == Alphabets.charAt(i)){
+                CharPosition += i;
             }
         }
-
         return CharPosition;
     }
     //This method takes takes two integer parameters, first is the position of a character and the next is the
@@ -101,11 +100,9 @@ public class Main {
         int tempPosition = 0;
         for (int i = 0; i < CeaserAlpha.length(); i++){
             if (position == i){
-                tempPosition = i;
-                break;
+                tempPosition += i;
             }
         }
-
         return CeaserAlpha.charAt(tempPosition);
     }
     //This method takes an integer parameter and returns the alphabetical arrangement with its shifted format.
@@ -200,7 +197,11 @@ public class Main {
         String UnceaserifiedText = "";
         String OriginalShiftedAlphabets = shiftAlphabet(ShiftValue);
         for (int i = 0; i < UngroupifiedString.length(); i++) {
-            UnceaserifiedText += getChar(OriginalShiftedAlphabets.indexOf(UngroupifiedString.charAt(i)));
+            for (int x = 0; x < OriginalShiftedAlphabets.length(); x++){
+                if (UngroupifiedString.charAt(i) == OriginalShiftedAlphabets.charAt(x)){
+                    UnceaserifiedText += getChar(x);
+                }
+            }
         }
         System.out.println("After Unceaserifying: " + UnceaserifiedText);
         System.out.println("----------------------------------------");
